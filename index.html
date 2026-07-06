@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
-            theme: {
-                extend: { colors: { vwbg: '#1a1a1a', vwcard: '#222222', vwred: '#e31837', vwgreen: '#00b14f', zalo: '#0068ff' } }
-            }
+            theme: { extend: { colors: { vwbg: '#1a1a1a', vwcard: '#222222', vwred: '#e31837', vwgreen: '#00b14f', zalo: '#0068ff' } } }
         }
     </script>
     <style>
@@ -22,7 +20,9 @@
 </head>
 <body class="bg-vwbg text-white font-sans relative">
 
+    <!-- BANNER SLIDER -->
     <header class="w-full relative h-[50vh] md:h-[70vh] overflow-hidden group" id="sliderContainer">
+        <!-- JS sẽ bơm ảnh slider vào đây -->
         <div class="absolute inset-0 z-20 flex flex-col justify-center items-center text-center p-4 pointer-events-none">
             <h1 class="text-4xl md:text-6xl font-bold uppercase tracking-widest mb-4 drop-shadow-2xl">Volkswagen</h1>
             <p class="text-lg md:text-xl text-gray-200 mb-8 drop-shadow-lg">Trải nghiệm đẳng cấp kỹ thuật Đức</p>
@@ -34,14 +34,15 @@
         <button onclick="changeSlide(1)" class="absolute right-4 top-1/2 z-30 bg-black/50 p-3 rounded-full hover:bg-vwred transition"><i class="fa-solid fa-chevron-right"></i></button>
     </header>
 
+    <!-- DANH SÁCH SẢN PHẨM -->
     <section class="max-w-7xl mx-auto py-16 px-4">
         <h2 class="text-3xl font-bold text-center mb-10 uppercase border-b border-gray-700 pb-4 inline-block mx-auto block w-max">Bảng Giá Các Dòng Xe</h2>
-        
         <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="text-center col-span-full py-10 text-gray-500"><i class="fa-solid fa-circle-notch fa-spin text-3xl"></i><p class="mt-2">Đang tải dữ liệu xe...</p></div>
+            <div class="text-center col-span-full py-10 text-gray-500"><i class="fa-solid fa-circle-notch fa-spin text-3xl"></i><p class="mt-2">Đang tải dữ liệu từ Google Sheets...</p></div>
         </div>
     </section>
 
+    <!-- NÚT THẢ NỔI -->
     <div class="fixed bottom-6 left-6 z-40 flex flex-col gap-3">
         <a href="https://zalo.me/0559260268" target="_blank" class="w-14 h-14 bg-zalo rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition cursor-pointer font-bold text-xl">Zalo</a>
         <a href="tel:0559260268" class="bg-vwred rounded-full flex items-center shadow-xl hover:scale-105 transition cursor-pointer pr-4 h-12">
@@ -50,11 +51,12 @@
         </a>
     </div>
 
+    <!-- POPUP FORM -->
     <div id="leadPopup" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4">
         <div class="bg-vwcard w-full max-w-lg rounded-lg border border-gray-700 relative overflow-hidden">
             <button onclick="closePopup()" class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
             <div class="p-8">
-                <h2 class="text-2xl font-bold text-center uppercase mb-2">Đăng Ký Lái Thử / Nhận Báo Giá</h2>
+                <h2 class="text-2xl font-bold text-center uppercase mb-2">Đăng Ký Lái Thử / Báo Giá</h2>
                 <form id="popupForm" class="space-y-4 mt-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="text" id="popName" required placeholder="Họ tên (Bắt buộc)" class="w-full bg-transparent border border-gray-600 rounded p-3 focus:border-vwred">
@@ -71,82 +73,102 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCIeeSuYcn8bTsuTxMqHepi7_1-LxIbD_M",
-            authDomain: "vw-nghean-website.firebaseapp.com",
-            projectId: "vw-nghean-website",
-            storageBucket: "vw-nghean-website.firebasestorage.app",
-            messagingSenderId: "850006345393",
-            appId: "1:850006345393:web:f02b92441d3215cbec0490"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    <!-- CODE XỬ LÝ DỮ LIỆU GOOGLE SHEETS & TELEGRAM -->
+    <script>
+        // ==========================================
+        // KHU VỰC CẤU HÌNH CỦA BẠN (ĐÃ GẮN LINK GOOGLE SHEETS)
+        // ==========================================
+        const CSV_LINK_BANNERS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQLhAzN9fKqOnDaDovxBSDbcspdnFcTnfNtMqCyuWyY9chBKiZZoHCeUN1pOCfJ7S8CQVdeoQx0-Vlw/pub?gid=0&single=true&output=csv";
+        const CSV_LINK_CARS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQLhAzN9fKqOnDaDovxBSDbcspdnFcTnfNtMqCyuWyY9chBKiZZoHCeUN1pOCfJ7S8CQVdeoQx0-Vlw/pub?gid=1730456102&single=true&output=csv";
         
+        const TELEGRAM_BOT_TOKEN = "8640843544:AAGBNBwwBfTaydjdgtzZT-YjJxM0i6OY6vw"; 
+        const TELEGRAM_CHAT_ID = "8218792935";
+        // ==========================================
+
         let slideIndex = 0;
         let sliderInterval;
 
-        // ĐỌC VÀ VẼ GIAO DIỆN TỪ FIREBASE
-        onSnapshot(doc(db, "settings", "dynamic_data"), (docSnap) => {
-            if (docSnap.exists()) {
-                const data = docSnap.data();
+        // Hàm đọc file CSV đơn giản
+        function parseCSV(text) {
+            const lines = text.split('\n').filter(line => line.trim() !== '');
+            return lines.map(line => line.split(',').map(cell => cell.trim()));
+        }
+
+        // Tải dữ liệu Banners
+        async function fetchBanners() {
+            if(!CSV_LINK_BANNERS.includes('http')) return;
+            try {
+                const response = await fetch(CSV_LINK_BANNERS);
+                const data = await response.text();
+                const rows = parseCSV(data);
                 
-                // 1. Vẽ Slider
                 const sliderContainer = document.getElementById('sliderContainer');
-                // Xóa các ảnh cũ (giữ lại phần text h1, p, button)
                 document.querySelectorAll('.slide').forEach(e => e.remove()); 
                 
-                if(data.banners && data.banners.length > 0) {
-                    let bannerHTML = '';
-                    data.banners.forEach((url, i) => {
+                let bannerHTML = '';
+                // Bỏ qua dòng đầu tiên (tiêu đề cột), bắt đầu từ i = 1
+                for(let i = 1; i < rows.length; i++) {
+                    let url = rows[i][0];
+                    if(url) {
                         bannerHTML += `
-                        <div class="slide ${i === 0 ? 'active' : ''} absolute inset-0 w-full h-full">
+                        <div class="slide ${i === 1 ? 'active' : ''} absolute inset-0 w-full h-full">
                             <div class="absolute inset-0 bg-black/40 z-10"></div>
                             <img src="${url}" class="w-full h-full object-cover">
                         </div>`;
-                    });
+                    }
+                }
+                if(bannerHTML !== '') {
                     sliderContainer.insertAdjacentHTML('afterbegin', bannerHTML);
-                    
-                    // Reset hiệu ứng chạy tự động
                     clearInterval(sliderInterval);
                     sliderInterval = setInterval(() => { changeSlide(1); }, 4000);
                 }
+            } catch (error) { console.error("Lỗi tải Banner:", error); }
+        }
 
-                // 2. Vẽ Lưới Sản Phẩm & Cập nhật danh sách Option
+        // Tải dữ liệu Cars
+        async function fetchCars() {
+            if(!CSV_LINK_CARS.includes('http')) return;
+            try {
+                const response = await fetch(CSV_LINK_CARS);
+                const data = await response.text();
+                const rows = parseCSV(data);
+                
                 const grid = document.getElementById('productGrid');
                 const selectCar = document.getElementById('popCar');
                 grid.innerHTML = ''; 
-                selectCar.innerHTML = '<option value="Chưa xác định">== Chọn dòng xe quan tâm ==</option>';
+                
+                // Bỏ qua dòng đầu tiên (tiêu đề cột), bắt đầu từ i = 1
+                for(let i = 1; i < rows.length; i++) {
+                    if(rows[i].length >= 3) {
+                        let name = rows[i][0];
+                        let price = rows[i][1];
+                        let img = rows[i][2];
 
-                if(data.cars && data.cars.length > 0) {
-                    data.cars.forEach((car, index) => {
-                        // Thêm vào lưới
                         grid.innerHTML += `
                         <div class="bg-vwcard rounded-lg p-4 border border-gray-800 flex flex-col justify-between hover:border-gray-500 transition">
-                            <img src="${car.img}" class="w-full h-40 object-contain mb-4 bg-white/5 rounded p-2" onerror="this.src='https://placehold.co/600x400?text=VW'">
+                            <img src="${img}" class="w-full h-40 object-contain mb-4 bg-white/5 rounded p-2" onerror="this.src='https://placehold.co/600x400?text=VW'">
                             <div class="text-center">
-                                <h3 class="text-lg font-bold">${car.name}</h3>
-                                <p class="text-vwgreen font-bold text-sm mb-4">${car.price}</p>
+                                <h3 class="text-lg font-bold">${name}</h3>
+                                <p class="text-vwgreen font-bold text-sm mb-4">${price}</p>
                                 <div class="grid grid-cols-2 gap-2">
-                                    <button onclick="openPopup('${car.name}')" class="bg-vwred hover:bg-red-700 text-xs font-bold py-2 rounded"><i class="fa-solid fa-bolt mr-1"></i> NHẬN ƯU ĐÃI</button>
+                                    <button onclick="openPopup('${name}')" class="bg-vwred hover:bg-red-700 text-xs font-bold py-2 rounded"><i class="fa-solid fa-bolt mr-1"></i> NHẬN ƯU ĐÃI</button>
                                     <a href="tel:0559260268" class="border border-vwgreen text-vwgreen hover:bg-vwgreen hover:text-white text-xs font-bold py-2 rounded flex justify-center items-center"><i class="fa-solid fa-phone-volume mr-1"></i> GỌI CHỐT GIÁ</a>
                                 </div>
                             </div>
                         </div>`;
-
-                        // Thêm vào thẻ select của Form
-                        selectCar.innerHTML += `<option value="${car.name}">${car.name}</option>`;
-                    });
-                } else {
-                    grid.innerHTML = `<div class="col-span-full text-center text-gray-400 py-10">Chưa có dữ liệu xe. Vui lòng thêm từ trang Admin.</div>`;
+                        selectCar.innerHTML += `<option value="${name}">${name}</option>`;
+                    }
                 }
+            } catch (error) { 
+                document.getElementById('productGrid').innerHTML = '<div class="col-span-full text-center text-red-500">Lỗi tải dữ liệu. Vui lòng kiểm tra lại link Google Sheets!</div>';
             }
-        });
+        }
 
-        // Hàm chuyển Slider
+        // Khởi động lấy dữ liệu
+        fetchBanners();
+        fetchCars();
+
+        // Xử lý Giao diện & Form
         window.changeSlide = function(n) {
             const slides = document.querySelectorAll('.slide');
             if(slides.length === 0) return;
@@ -155,7 +177,6 @@
             slides[slideIndex].classList.add('active'); 
         }
 
-        // POPUP
         const popup = document.getElementById('leadPopup');
         window.openPopup = function(carName) {
             const select = document.getElementById('popCar');
@@ -167,23 +188,18 @@
         window.closePopup = function() { popup.classList.add('hidden'); }
         window.onclick = function(e) { if (e.target == popup) closePopup(); }
 
-        // GỬI TELEGRAM
         document.getElementById('popupForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('popSubmitBtn');
             btn.innerText = 'ĐANG GỬI...';
-
             const ten = document.getElementById('popName').value;
             const sdt = document.getElementById('popPhone').value;
             const xe = document.getElementById('popCar').value;
+            const textMessage = `🚨 CÓ KHÁCH TỪ GOOGLE SHEETS WEB 🚨\n👤 Tên: ${ten}\n📞 SĐT: ${sdt}\n🚗 Xe: ${xe}\n⏰ Lúc: ${new Date().toLocaleString('vi-VN')}`;
 
-            const botToken = '8640843544:AAGBNBwwBfTaydjdgtzZT-YjJxM0i6OY6vw'; 
-            const chatId = '8218792935';
-            const textMessage = `🚨 CÓ KHÁCH (WEB MỚI) 🚨\n👤 Tên: ${ten}\n📞 SĐT: ${sdt}\n🚗 Xe: ${xe}\n⏰ Lúc: ${new Date().toLocaleString('vi-VN')}`;
-
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: chatId, text: textMessage })
+                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: textMessage })
             }).then(() => {
                 alert('Đã đăng ký! Tường Vân sẽ liên hệ lại ngay.');
                 btn.innerText = 'ĐÃ GỬI THÀNH CÔNG';
