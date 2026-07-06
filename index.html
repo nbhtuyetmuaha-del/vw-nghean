@@ -2,303 +2,220 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volkswagen - Đẳng Cấp Đức</title>
-    <!-- Tailwind CSS -->
+    <title>Hệ Thống Quản Trị Động - VW Nghệ An</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        vwbg: '#1a1a1a', // Nền tối
-                        vwcard: '#222222', // Nền thẻ xe
-                        vwred: '#e31837', // Đỏ chủ đạo nút Nhận ưu đãi
-                        vwgreen: '#00b14f', // Xanh giá tiền
-                        zalo: '#0068ff'
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Hiệu ứng mượt cho Slider và Popup */
-        .slide { display: none; animation: fade 1s; }
-        .slide.active { display: block; }
-        @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
-        html { scroll-behavior: smooth; }
-    </style>
+    <style> .loader { border-top-color: #eb6e00; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; } @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } </style>
 </head>
-<body class="bg-vwbg text-white font-sans relative">
+<body class="bg-gray-100 font-sans pb-20">
 
-    <!-- 1. BANNER SLIDER CÙNG HEADER -->
-    <header class="w-full relative h-[50vh] md:h-[70vh] overflow-hidden group">
-        <!-- Slides -->
-        <div class="slide active w-full h-full">
-            <div class="absolute inset-0 bg-black/40 z-10"></div>
-            <img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1920&q=80" class="w-full h-full object-cover">
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center bg-[#001e50] z-50 fixed inset-0">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm text-center">
+            <h2 class="text-2xl font-bold text-[#001e50] mb-6">Đăng Nhập Quản Trị</h2>
+            <form id="loginForm" class="space-y-4">
+                <input type="text" id="username" placeholder="Tên đăng nhập (admin)" required class="w-full border p-3 rounded">
+                <input type="password" id="password" placeholder="Mật khẩu (vw2026)" required class="w-full border p-3 rounded">
+                <p id="loginError" class="text-red-500 text-sm hidden">Sai thông tin!</p>
+                <button type="submit" class="w-full bg-[#eb6e00] text-white font-bold py-3 rounded">ĐĂNG NHẬP</button>
+            </form>
         </div>
-        <div class="slide w-full h-full">
-            <div class="absolute inset-0 bg-black/40 z-10"></div>
-            <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1920&q=80" class="w-full h-full object-cover">
-        </div>
-        
-        <!-- Nội dung Header đè lên banner -->
-        <div class="absolute inset-0 z-20 flex flex-col justify-center items-center text-center p-4">
-            <h1 class="text-4xl md:text-6xl font-bold uppercase tracking-widest mb-4 drop-shadow-lg">Volkswagen</h1>
-            <p class="text-lg md:text-xl text-gray-200 mb-8">Trải nghiệm đẳng cấp kỹ thuật Đức</p>
-            <button onclick="openPopup()" class="bg-vwred hover:bg-red-700 text-white font-bold py-3 px-8 rounded shadow-lg transition">
-                <i class="fa-solid fa-car-side mr-2"></i> ĐĂNG KÝ LÁI THỬ NGAY
-            </button>
-        </div>
-
-        <!-- Nút điều hướng Slider -->
-        <button onclick="changeSlide(-1)" class="absolute left-4 top-1/2 z-30 bg-black/50 p-3 rounded-full text-white hover:bg-vwred transition"><i class="fa-solid fa-chevron-left"></i></button>
-        <button onclick="changeSlide(1)" class="absolute right-4 top-1/2 z-30 bg-black/50 p-3 rounded-full text-white hover:bg-vwred transition"><i class="fa-solid fa-chevron-right"></i></button>
-    </header>
-
-    <!-- 2 & 3. DANH SÁCH SẢN PHẨM (DẠNG GRID NHƯ ẢNH MẪU) -->
-    <section class="max-w-7xl mx-auto py-16 px-4">
-        <h2 class="text-3xl font-bold text-center mb-10 uppercase border-b border-gray-700 pb-4 inline-block mx-auto block w-max">Bảng Giá Các Dòng Xe</h2>
-        
-        <!-- Cấu trúc Grid: 1 cột (Mobile), 2 cột (Tablet), 3 cột (PC) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <!-- Thẻ Xe 1 -->
-            <div class="bg-vwcard rounded-lg p-4 border border-gray-800 hover:border-gray-600 transition flex flex-col justify-between">
-                <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80" alt="VW Golf" class="w-full h-40 object-contain mb-4">
-                <div class="text-center">
-                    <h3 class="text-lg font-bold">Volkswagen Golf</h3>
-                    <p class="text-vwgreen font-bold text-sm mb-4">Giá từ: 798 triệu</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="openPopup('Golf')" class="bg-vwred hover:bg-red-700 text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center">
-                            <i class="fa-solid fa-bolt mr-1"></i> NHẬN ƯU ĐÃI
-                        </button>
-                        <a href="tel:0559260268" class="border border-vwgreen text-vwgreen hover:bg-vwgreen hover:text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center transition">
-                            <i class="fa-solid fa-phone-volume mr-1"></i> GỌI CHỐT GIÁ
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Thẻ Xe 2 -->
-            <div class="bg-vwcard rounded-lg p-4 border border-gray-800 hover:border-gray-600 transition flex flex-col justify-between">
-                <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=600&q=80" alt="VW Teramont Pro" class="w-full h-40 object-contain mb-4">
-                <div class="text-center">
-                    <h3 class="text-lg font-bold">Volkswagen Teramont Pro</h3>
-                    <p class="text-vwgreen font-bold text-sm mb-4">Giá từ: 2.799 triệu</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="openPopup('Teramont Pro')" class="bg-vwred hover:bg-red-700 text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center">
-                            <i class="fa-solid fa-bolt mr-1"></i> NHẬN ƯU ĐÃI
-                        </button>
-                        <a href="tel:0559260268" class="border border-vwgreen text-vwgreen hover:bg-vwgreen hover:text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center transition">
-                            <i class="fa-solid fa-phone-volume mr-1"></i> GỌI CHỐT GIÁ
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Thẻ Xe 3 -->
-            <div class="bg-vwcard rounded-lg p-4 border border-gray-800 hover:border-gray-600 transition flex flex-col justify-between">
-                <img src="https://images.unsplash.com/photo-1617469767053-d3b508a0d825?auto=format&fit=crop&w=600&q=80" alt="VW Teramont X" class="w-full h-40 object-contain mb-4">
-                <div class="text-center">
-                    <h3 class="text-lg font-bold">Volkswagen Teramont X</h3>
-                    <p class="text-vwgreen font-bold text-sm mb-4">Giá từ: 1.998 triệu</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="openPopup('Teramont X')" class="bg-vwred hover:bg-red-700 text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center">
-                            <i class="fa-solid fa-bolt mr-1"></i> NHẬN ƯU ĐÃI
-                        </button>
-                        <a href="tel:0559260268" class="border border-vwgreen text-vwgreen hover:bg-vwgreen hover:text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center transition">
-                            <i class="fa-solid fa-phone-volume mr-1"></i> GỌI CHỐT GIÁ
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Thẻ Xe 4 -->
-            <div class="bg-vwcard rounded-lg p-4 border border-gray-800 hover:border-gray-600 transition flex flex-col justify-between">
-                <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80" alt="VW Tiguan" class="w-full h-40 object-contain mb-4">
-                <div class="text-center">
-                    <h3 class="text-lg font-bold">Volkswagen Tiguan</h3>
-                    <p class="text-vwgreen font-bold text-sm mb-4">Giá từ: 1.599 triệu</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="openPopup('Tiguan')" class="bg-vwred hover:bg-red-700 text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center">
-                            <i class="fa-solid fa-bolt mr-1"></i> NHẬN ƯU ĐÃI
-                        </button>
-                        <a href="tel:0559260268" class="border border-vwgreen text-vwgreen hover:bg-vwgreen hover:text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center transition">
-                            <i class="fa-solid fa-phone-volume mr-1"></i> GỌI CHỐT GIÁ
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Thẻ Xe 5 -->
-            <div class="bg-vwcard rounded-lg p-4 border border-gray-800 hover:border-gray-600 transition flex flex-col justify-between">
-                <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80" alt="VW Viloran" class="w-full h-40 object-contain mb-4">
-                <div class="text-center">
-                    <h3 class="text-lg font-bold">Volkswagen Viloran</h3>
-                    <p class="text-vwgreen font-bold text-sm mb-4">Giá từ: 1.989 triệu</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="openPopup('Viloran')" class="bg-vwred hover:bg-red-700 text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center">
-                            <i class="fa-solid fa-bolt mr-1"></i> NHẬN ƯU ĐÃI
-                        </button>
-                        <a href="tel:0559260268" class="border border-vwgreen text-vwgreen hover:bg-vwgreen hover:text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center transition">
-                            <i class="fa-solid fa-phone-volume mr-1"></i> GỌI CHỐT GIÁ
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-             <!-- Thẻ Xe 6 -->
-             <div class="bg-vwcard rounded-lg p-4 border border-gray-800 hover:border-gray-600 transition flex flex-col justify-between">
-                <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80" alt="VW Touareg" class="w-full h-40 object-contain mb-4">
-                <div class="text-center">
-                    <h3 class="text-lg font-bold">Volkswagen Touareg</h3>
-                    <p class="text-vwgreen font-bold text-sm mb-4">Giá từ: 2.699 triệu</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="openPopup('Touareg')" class="bg-vwred hover:bg-red-700 text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center">
-                            <i class="fa-solid fa-bolt mr-1"></i> NHẬN ƯU ĐÃI
-                        </button>
-                        <a href="tel:0559260268" class="border border-vwgreen text-vwgreen hover:bg-vwgreen hover:text-white text-xs font-bold py-2 px-2 rounded flex items-center justify-center transition">
-                            <i class="fa-solid fa-phone-volume mr-1"></i> GỌI CHỐT GIÁ
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- 4. NÚT KÊU GỌI HÀNH ĐỘNG THẢ NỔI (STICKY) -->
-    <div class="fixed bottom-6 left-6 z-40 flex flex-col gap-3">
-        <!-- Nút Zalo -->
-        <a href="https://zalo.me/0559260268" target="_blank" class="w-14 h-14 bg-zalo rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition cursor-pointer text-white font-bold text-xl">
-            Zalo
-        </a>
-        <!-- Nút Hotline hình viên thuốc -->
-        <a href="tel:0559260268" class="bg-vwred rounded-full flex items-center shadow-xl hover:scale-105 transition cursor-pointer pr-4 h-12">
-            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-vwred text-xl">
-                <i class="fa-solid fa-phone-volume animate-pulse"></i>
-            </div>
-            <span class="text-white font-bold text-sm ml-3">Hotline: 0559.260.268</span>
-        </a>
     </div>
 
-    <!-- 5. POPUP FORM ĐĂNG KÝ LÁI THỬ / NHẬN ƯU ĐÃI -->
-    <div id="leadPopup" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4">
-        <div class="bg-vwcard w-full max-w-lg rounded-lg border border-gray-700 relative overflow-hidden">
-            <!-- Nút đóng -->
-            <button onclick="closePopup()" class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
-            
-            <div class="p-8">
-                <h2 class="text-2xl font-bold text-center uppercase mb-2">Đăng Ký Lái Thử Xe <br> Volkswagen</h2>
-                <p class="text-sm text-gray-400 text-center mb-6">Ngay sau khi nhận được yêu cầu Chúng tôi sẽ gửi thông tin lái thử đến Quý khách trong thời gian sớm nhất.</p>
-                
-                <form id="popupForm" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="popName" required placeholder="Họ tên (Bắt buộc)" class="w-full bg-transparent border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-vwred">
-                        <input type="tel" id="popPhone" required placeholder="Điện thoại (Bắt buộc)" class="w-full bg-transparent border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-vwred">
-                    </div>
-                    
-                    <select id="popCar" class="w-full bg-vwcard border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-vwred appearance-none">
-                        <option value="Chưa xác định">== Chọn dòng xe ==</option>
-                        <option value="Golf">Volkswagen Golf</option>
-                        <option value="Teramont Pro">Volkswagen Teramont Pro</option>
-                        <option value="Teramont X">Volkswagen Teramont X</option>
-                        <option value="Teramont">Volkswagen Teramont</option>
-                        <option value="Tiguan">Volkswagen Tiguan</option>
-                        <option value="Touareg">Volkswagen Touareg</option>
-                        <option value="Viloran">Volkswagen Viloran</option>
-                    </select>
+    <div id="adminDashboard" class="hidden">
+        <div class="bg-[#001e50] text-white p-4 shadow-md sticky top-0 z-40">
+            <div class="max-w-6xl mx-auto flex justify-between items-center">
+                <h1 class="text-xl font-bold"><i class="fa-solid fa-gear mr-2"></i>CMS - Tùy Biến Giao Diện</h1>
+                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm font-bold">Thoát</button>
+            </div>
+        </div>
 
-                    <input type="date" id="popDate" class="w-full bg-transparent border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-vwred" style="color-scheme: dark;">
-                    
-                    <button type="submit" id="popSubmitBtn" class="w-full bg-vwred hover:bg-red-700 text-white font-bold py-4 rounded transition flex items-center justify-center uppercase mt-2">
-                        <i class="fa-solid fa-angles-right mr-2"></i> Đăng Ký Lái Thử Ngay
-                    </button>
-                </form>
+        <div class="max-w-6xl mx-auto mt-8 px-4 space-y-8">
+            
+            <div class="bg-white p-6 rounded-xl shadow border-t-4 border-[#001e50]">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-xl text-[#001e50]">1. Danh Sách Ảnh Bìa (Banner Slider)</h2>
+                    <button id="addBannerBtn" class="bg-blue-600 text-white px-3 py-2 rounded text-sm font-bold"><i class="fa-solid fa-plus mr-1"></i> Thêm Ảnh Bìa</button>
+                </div>
+                <div id="bannerContainer" class="space-y-4">
+                    </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow border-t-4 border-[#eb6e00]">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-xl text-[#001e50]">2. Danh Sách Sản Phẩm (Hiển thị dạng lưới)</h2>
+                    <button id="addCarBtn" class="bg-[#eb6e00] text-white px-3 py-2 rounded text-sm font-bold"><i class="fa-solid fa-plus mr-1"></i> Thêm Dòng Xe</button>
+                </div>
+                <div id="carContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+            </div>
+
+            <div class="sticky bottom-4 z-40">
+                <button id="saveBtn" class="w-full bg-green-600 hover:bg-green-700 shadow-2xl text-white font-bold py-4 rounded-xl text-lg uppercase flex justify-center items-center">
+                    <i class="fa-solid fa-floppy-disk mr-2"></i> LƯU VÀ CẬP NHẬT TRANG CHỦ
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT XỬ LÝ GIAO DIỆN VÀ GỬI TELEGRAM -->
-    <script>
-        // --- XỬ LÝ SLIDER ---
-        let slideIndex = 0;
-        const slides = document.querySelectorAll('.slide');
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // Import module Storage để tải ảnh
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIeeSuYcn8bTsuTxMqHepi7_1-LxIbD_M",
+            authDomain: "vw-nghean-website.firebaseapp.com",
+            projectId: "vw-nghean-website",
+            storageBucket: "vw-nghean-website.firebasestorage.app",
+            messagingSenderId: "850006345393",
+            appId: "1:850006345393:web:f02b92441d3215cbec0490"
+        };
         
-        function showSlide(n) {
-            slides.forEach(s => s.classList.remove('active'));
-            slideIndex = (n + slides.length) % slides.length;
-            slides[slideIndex].classList.add('active');
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const docRef = doc(db, "settings", "dynamic_data");
+
+        // ĐĂNG NHẬP
+        document.getElementById('loginForm').onsubmit = (e) => {
+            e.preventDefault();
+            if(document.getElementById('username').value === 'admin' && document.getElementById('password').value === 'vw2026') {
+                sessionStorage.setItem('isCMSAdmin', 'true');
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                loadData();
+            } else document.getElementById('loginError').classList.remove('hidden');
+        };
+        if(sessionStorage.getItem('isCMSAdmin') === 'true') {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            loadData();
         }
-        function changeSlide(n) { showSlide(slideIndex + n); }
-        // Tự động chuyển slide sau 5 giây
-        setInterval(() => { changeSlide(1); }, 5000);
+        window.logout = () => { sessionStorage.clear(); location.reload(); }
 
-        // --- XỬ LÝ POPUP ---
-        const popup = document.getElementById('leadPopup');
-        const selectCar = document.getElementById('popCar');
+        // --- GIAO DIỆN HTML CHO TỪNG ITEM ---
+        const bannerContainer = document.getElementById('bannerContainer');
+        const carContainer = document.getElementById('carContainer');
 
-        function openPopup(carName = 'Chưa xác định') {
-            popup.classList.remove('hidden');
-            // Tự động chọn dòng xe tương ứng khi bấm từ nút của xe đó
-            if(carName !== 'Chưa xác định') {
-                for(let i=0; i<selectCar.options.length; i++) {
-                    if(selectCar.options[i].value === carName) {
-                        selectCar.selectedIndex = i;
-                        break;
-                    }
-                }
+        function createBannerHTML(url = '') {
+            return `
+            <div class="banner-item bg-gray-50 border p-4 rounded flex items-end gap-4 relative">
+                <div class="flex-1">
+                    <label class="block text-sm font-bold text-gray-700 mb-1">🔗 Link Ảnh Bìa</label>
+                    <input type="text" value="${url}" class="url-input w-full border p-2 rounded text-sm mb-2" placeholder="Dán link hoặc bấm nút bên cạnh tải lên...">
+                    <label class="block text-xs font-semibold text-blue-600 cursor-pointer">
+                        <i class="fa-solid fa-upload"></i> Tải ảnh từ thiết bị lên
+                        <input type="file" accept="image/*" class="file-upload hidden">
+                    </label>
+                </div>
+                <img src="${url || 'https://placehold.co/100x50?text=Banner'}" class="preview-img w-32 h-16 object-cover border rounded bg-white">
+                <button type="button" class="delete-btn absolute top-2 right-2 text-red-500 hover:bg-red-100 p-1 rounded"><i class="fa-solid fa-trash"></i></button>
+            </div>`;
+        }
+
+        function createCarHTML(car = {name:'', price:'', img:''}) {
+            return `
+            <div class="car-item bg-gray-50 border border-gray-200 p-4 rounded shadow-sm relative">
+                <button type="button" class="delete-btn absolute top-2 right-2 text-red-500 hover:bg-red-100 w-8 h-8 rounded"><i class="fa-solid fa-trash"></i></button>
+                <div class="mb-3">
+                    <label class="block text-sm font-bold text-[#001e50] mb-1">🚗 Tên Dòng Xe</label>
+                    <input type="text" value="${car.name}" class="name-input w-full border border-gray-300 p-2 rounded text-sm" placeholder="VD: Volkswagen Teramont">
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-bold text-green-700 mb-1">💰 Giá Bán</label>
+                    <input type="text" value="${car.price}" class="price-input w-full border border-green-300 p-2 rounded text-sm text-green-700 font-semibold" placeholder="VD: Giá từ: 1.998 triệu">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">🖼️ Ảnh Minh Họa</label>
+                    <input type="text" value="${car.img}" class="url-input w-full border border-gray-300 p-2 rounded text-sm mb-2" placeholder="Link ảnh hoặc tải lên...">
+                    <div class="flex items-center gap-3">
+                        <label class="flex-1 bg-blue-50 text-blue-600 border border-blue-200 text-center text-xs font-bold py-2 rounded cursor-pointer hover:bg-blue-100">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Tải ảnh từ thiết bị
+                            <input type="file" accept="image/*" class="file-upload hidden">
+                        </label>
+                        <img src="${car.img || 'https://placehold.co/150x100?text=Xe'}" class="preview-img w-16 h-12 object-contain bg-white border rounded">
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // TẢI DỮ LIỆU
+        async function loadData() {
+            const docSnap = await getDoc(docRef);
+            bannerContainer.innerHTML = ''; carContainer.innerHTML = '';
+            
+            if (docSnap.exists() && docSnap.data().banners) {
+                const data = docSnap.data();
+                data.banners.forEach(url => bannerContainer.insertAdjacentHTML('beforeend', createBannerHTML(url)));
+                data.cars.forEach(car => carContainer.insertAdjacentHTML('beforeend', createCarHTML(car)));
+            } else {
+                // Khởi tạo mặc định nếu chưa có dữ liệu
+                bannerContainer.insertAdjacentHTML('beforeend', createBannerHTML(''));
+                carContainer.insertAdjacentHTML('beforeend', createCarHTML({}));
             }
         }
 
-        function closePopup() {
-            popup.classList.add('hidden');
-        }
+        // CÁC NÚT THÊM/XÓA
+        document.getElementById('addBannerBtn').onclick = () => bannerContainer.insertAdjacentHTML('beforeend', createBannerHTML(''));
+        document.getElementById('addCarBtn').onclick = () => carContainer.insertAdjacentHTML('beforeend', createCarHTML({}));
 
-        // Đóng popup khi click ra ngoài form
-        window.onclick = function(event) {
-            if (event.target == popup) closePopup();
-        }
-
-        // --- XỬ LÝ GỬI FORM VỀ TELEGRAM ---
-        document.getElementById('popupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('popSubmitBtn');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> ĐANG GỬI...';
-
-            const ten = document.getElementById('popName').value;
-            const sdt = document.getElementById('popPhone').value;
-            const xe = document.getElementById('popCar').value;
-            const ngay = document.getElementById('popDate').value || 'Không chọn ngày';
-
-            // Mã Telegram của bạn
-            const botToken = '8640843544:AAGBNBwwBfTaydjdgtzZT-YjJxM0i6OY6vw'; 
-            const chatId = '8218792935';
-
-            const textMessage = `🚨 CÓ KHÁCH ĐĂNG KÝ (GIAO DIỆN MỚI) 🚨\n\n👤 Khách hàng: ${ten}\n📞 SĐT: ${sdt}\n🚗 Dòng xe: ${xe}\n📅 Ngày dự kiến: ${ngay}\n⏰ Lúc: ${new Date().toLocaleString('vi-VN')}`;
-
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: chatId, text: textMessage })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('Đăng ký thành công! Chuyên viên Tường Vân sẽ liên hệ lại ngay.');
-                btn.innerHTML = '<i class="fa-solid fa-check mr-2"></i> ĐÃ GỬI THÀNH CÔNG';
-                document.getElementById('popupForm').reset();
-                setTimeout(closePopup, 1500);
-            })
-            .catch(error => {
-                console.error('Lỗi:', error);
-                alert('Có lỗi mạng, vui lòng gọi trực tiếp Hotline!');
-                btn.innerHTML = 'Đăng Ký Lái Thử Ngay';
-            });
+        document.addEventListener('click', (e) => {
+            if(e.target.closest('.delete-btn')) {
+                if(confirm('Bạn có chắc muốn xóa mục này?')) {
+                    e.target.closest('.banner-item, .car-item').remove();
+                }
+            }
         });
+
+        // XỬ LÝ UPLOAD ẢNH TỪ THIẾT BỊ LÊN FIREBASE STORAGE
+        document.addEventListener('change', async (e) => {
+            if(e.target.classList.contains('file-upload')) {
+                const file = e.target.files[0];
+                if(!file) return;
+
+                const parent = e.target.closest('.banner-item, .car-item');
+                const urlInput = parent.querySelector('.url-input');
+                const imgPreview = parent.querySelector('.preview-img');
+                
+                urlInput.value = "Đang tải ảnh lên máy chủ...";
+                try {
+                    const storageRef = ref(storage, 'images/' + Date.now() + '_' + file.name);
+                    await uploadBytes(storageRef, file);
+                    const downloadURL = await getDownloadURL(storageRef);
+                    urlInput.value = downloadURL;
+                    imgPreview.src = downloadURL;
+                } catch (error) {
+                    alert('Lỗi tải ảnh. Bạn đã bật Firebase Storage chế độ Test mode chưa?');
+                    urlInput.value = "";
+                }
+            }
+        });
+
+        // LƯU DỮ LIỆU LÊN FIREBASE FIRESTORE
+        document.getElementById('saveBtn').onclick = async () => {
+            const btn = document.getElementById('saveBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="w-6 h-6 border-4 border-white border-solid rounded-full loader mr-2"></div> ĐANG LƯU...';
+
+            const banners = Array.from(document.querySelectorAll('.banner-item .url-input'))
+                                .map(input => input.value).filter(val => val !== '');
+            
+            const cars = Array.from(document.querySelectorAll('.car-item')).map(item => ({
+                name: item.querySelector('.name-input').value,
+                price: item.querySelector('.price-input').value,
+                img: item.querySelector('.url-input').value
+            })).filter(car => car.name !== ''); // Chỉ lưu xe có tên
+
+            try {
+                await setDoc(docRef, { banners, cars, updatedAt: new Date().toISOString() });
+                alert('✅ Lưu thành công! Trang chủ đã được cập nhật số lượng sản phẩm mới.');
+            } catch (error) {
+                alert('Lỗi lưu dữ liệu: ' + error);
+            } finally {
+                btn.innerHTML = originalText;
+            }
+        };
     </script>
 </body>
 </html>
