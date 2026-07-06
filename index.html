@@ -22,7 +22,6 @@
 
     <!-- BANNER SLIDER -->
     <header class="w-full relative h-[50vh] md:h-[70vh] overflow-hidden group" id="sliderContainer">
-        <!-- JS sẽ bơm ảnh slider vào đây -->
         <div class="absolute inset-0 z-20 flex flex-col justify-center items-center text-center p-4 pointer-events-none">
             <h1 class="text-4xl md:text-6xl font-bold uppercase tracking-widest mb-4 drop-shadow-2xl">Volkswagen</h1>
             <p class="text-lg md:text-xl text-gray-200 mb-8 drop-shadow-lg">Trải nghiệm đẳng cấp kỹ thuật Đức</p>
@@ -75,26 +74,20 @@
 
     <!-- CODE XỬ LÝ DỮ LIỆU GOOGLE SHEETS & TELEGRAM -->
     <script>
-        // ==========================================
-        // KHU VỰC CẤU HÌNH CỦA BẠN (ĐÃ GẮN LINK GOOGLE SHEETS)
-        // ==========================================
         const CSV_LINK_BANNERS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQLhAzN9fKqOnDaDovxBSDbcspdnFcTnfNtMqCyuWyY9chBKiZZoHCeUN1pOCfJ7S8CQVdeoQx0-Vlw/pub?gid=0&single=true&output=csv";
         const CSV_LINK_CARS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQLhAzN9fKqOnDaDovxBSDbcspdnFcTnfNtMqCyuWyY9chBKiZZoHCeUN1pOCfJ7S8CQVdeoQx0-Vlw/pub?gid=1730456102&single=true&output=csv";
         
         const TELEGRAM_BOT_TOKEN = "8640843544:AAGBNBwwBfTaydjdgtzZT-YjJxM0i6OY6vw"; 
         const TELEGRAM_CHAT_ID = "8218792935";
-        // ==========================================
 
         let slideIndex = 0;
         let sliderInterval;
 
-        // Hàm đọc file CSV đơn giản
         function parseCSV(text) {
             const lines = text.split('\n').filter(line => line.trim() !== '');
             return lines.map(line => line.split(',').map(cell => cell.trim()));
         }
 
-        // Tải dữ liệu Banners
         async function fetchBanners() {
             if(!CSV_LINK_BANNERS.includes('http')) return;
             try {
@@ -106,7 +99,6 @@
                 document.querySelectorAll('.slide').forEach(e => e.remove()); 
                 
                 let bannerHTML = '';
-                // Bỏ qua dòng đầu tiên (tiêu đề cột), bắt đầu từ i = 1
                 for(let i = 1; i < rows.length; i++) {
                     let url = rows[i][0];
                     if(url) {
@@ -125,7 +117,6 @@
             } catch (error) { console.error("Lỗi tải Banner:", error); }
         }
 
-        // Tải dữ liệu Cars
         async function fetchCars() {
             if(!CSV_LINK_CARS.includes('http')) return;
             try {
@@ -137,16 +128,16 @@
                 const selectCar = document.getElementById('popCar');
                 grid.innerHTML = ''; 
                 
-                // Bỏ qua dòng đầu tiên (tiêu đề cột), bắt đầu từ i = 1
                 for(let i = 1; i < rows.length; i++) {
                     if(rows[i].length >= 3) {
                         let name = rows[i][0];
                         let price = rows[i][1];
                         let img = rows[i][2];
 
+                        // Đã thay đổi object-contain thành object-cover và tăng chiều cao (h-52)
                         grid.innerHTML += `
                         <div class="bg-vwcard rounded-lg p-4 border border-gray-800 flex flex-col justify-between hover:border-gray-500 transition">
-                            <img src="${img}" class="w-full h-40 object-contain mb-4 bg-white/5 rounded p-2" onerror="this.src='https://placehold.co/600x400?text=VW'">
+                            <img src="${img}" class="w-full h-52 object-cover mb-4 rounded bg-black/20" onerror="this.src='https://placehold.co/600x400?text=VW'">
                             <div class="text-center">
                                 <h3 class="text-lg font-bold">${name}</h3>
                                 <p class="text-vwgreen font-bold text-sm mb-4">${price}</p>
@@ -164,11 +155,9 @@
             }
         }
 
-        // Khởi động lấy dữ liệu
         fetchBanners();
         fetchCars();
 
-        // Xử lý Giao diện & Form
         window.changeSlide = function(n) {
             const slides = document.querySelectorAll('.slide');
             if(slides.length === 0) return;
