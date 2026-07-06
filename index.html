@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volkswagen Nghệ An - Đại Lý Chính Hãng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 30, 80, 0.8), rgba(0, 30, 80, 0.6)), url('https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- Header -->
+    <header class="bg-[#001e50] text-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full border-2 border-white flex items-center justify-center font-bold text-xl">W</div>
+                <div>
+                    <span class="font-bold tracking-wider block leading-none">VOLKSWAGEN NGHỆ AN</span>
+                    <span class="text-xs text-gray-300">Đẳng Cấp Đức - Giá Trị Bền Vững</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="#booking" class="bg-[#eb6e00] hover:bg-orange-600 text-white text-sm px-4 py-2 rounded-full font-bold transition">
+                    Đăng Ký Lái Thử
+                </a>
+                <a href="tel:0559260268" id="displayHotline" class="font-bold text-[#eb6e00] hover:text-white flex items-center">
+                    <i class="fa-solid fa-phone-volume mr-2 animate-pulse"></i> 0559.260.268
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section (Dữ liệu từ Firebase) -->
+    <section class="hero-bg text-white py-16 lg:py-24 px-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <span class="bg-[#eb6e00] text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">Đại lý chuẩn 4S</span>
+                <h1 id="displayHeadline" class="text-3xl md:text-5xl font-bold tracking-tight leading-tight">
+                    Đang tải thông điệp...
+                </h1>
+                <p class="text-gray-300 text-lg">Hỗ trợ trả góp • Thu xe cũ đổi xe mới • Lái thử tận nơi</p>
+                
+                <!-- Bảng Xe Hot Deal từ Firebase -->
+                <div class="mt-8 bg-white/10 p-6 rounded-xl backdrop-blur-md border border-white/20 inline-block text-left w-full max-w-md">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-yellow-400 font-bold uppercase text-sm"><i class="fa-solid fa-fire mr-1"></i> Xe Ưu Đãi Đặc Biệt</h3>
+                    </div>
+                    <h2 id="displayCarName" class="text-2xl font-bold mb-1">Đang tải...</h2>
+                    <p id="displayCarPrice" class="text-[#eb6e00] text-xl font-extrabold mb-3">Đang tải...</p>
+                    <div class="text-sm bg-black/30 p-3 rounded">
+                        <i class="fa-solid fa-gift text-yellow-400 mr-2"></i><span id="displayCarPromo">Đang tải khuyến mãi...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Lead Telegram -->
+            <div id="booking" class="lg:col-span-5 bg-white text-gray-800 rounded-xl shadow-2xl p-6 md:p-8">
+                <h3 class="text-xl font-bold text-[#001e50] mb-2 text-center">NHẬN BÁO GIÁ LĂN BÁNH TỪ TƯỜNG VÂN</h3>
+                <p class="text-sm text-gray-500 text-center mb-6">Tận tâm từ tư vấn đến đồng hành sau bán hàng.</p>
+                
+                <form id="leadForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Họ và tên *</label>
+                        <input type="text" id="khachTen" required placeholder="Nguyễn Văn A" class="w-full px-4 py-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#001e50]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Số điện thoại *</label>
+                        <input type="tel" id="khachSDT" required placeholder="090xxxxxxx" class="w-full px-4 py-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#001e50]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Dòng xe quan tâm</label>
+                        <select id="khachXe" class="w-full px-4 py-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#001e50] bg-white">
+                            <option value="Chưa xác định">Chọn dòng xe...</option>
+                            <option value="Teramont President">Teramont President</option>
+                            <option value="Touareg">Touareg (Elegance / Luxury)</option>
+                            <option value="Viloran">Volkswagen Viloran</option>
+                            <option value="Teramont X">Teramont X</option>
+                            <option value="Tiguan">Volkswagen Tiguan</option>
+                            <option value="Golf">Dòng xe Golf Hatchback</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="btnSubmit" class="w-full bg-[#eb6e00] hover:bg-orange-600 text-white font-bold py-3.5 px-4 rounded-md shadow transition uppercase tracking-wide mt-2">
+                        Gửi Yêu Cầu Tư Vấn
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Thông tin Chuyên viên & Footer -->
+    <footer class="bg-[#001e50] text-white py-12 px-4 mt-12">
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="text-center md:text-left">
+                <h3 class="font-bold text-xl mb-1 uppercase">TƯỜNG VÂN</h3>
+                <p class="text-[#eb6e00] text-sm mb-4">Chuyên viên Tư vấn Kinh doanh Volkswagen</p>
+                <p class="text-sm mb-2"><i class="fa-solid fa-building mr-2"></i> Đại lý: Volkswagen Vinh</p>
+                <p class="text-sm mb-2"><i class="fa-solid fa-location-dot mr-2"></i> 89B Xô Viết Nghệ Tĩnh, Vinh Phú, Nghệ An</p>
+                <p class="text-sm"><i class="fa-solid fa-phone mr-2"></i> Hotline/Zalo: 0559 260 268</p>
+            </div>
+            <div class="bg-white/10 p-6 rounded-lg text-center border border-white/20">
+                <i class="fa-solid fa-quote-left text-3xl text-white/30 mb-2"></i>
+                <p class="text-sm italic leading-relaxed">
+                    "Không chỉ bán một chiếc xe, tôi đồng hành cùng bạn trên mọi hành trình."
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT 1: FIREBASE ĐỌC DỮ LIỆU -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Cấu hình Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIeeSuYcn8bTsuTxMqHepi7_1-LxIbD_M",
+            authDomain: "vw-nghean-website.firebaseapp.com",
+            projectId: "vw-nghean-website",
+            storageBucket: "vw-nghean-website.firebasestorage.app",
+            messagingSenderId: "850006345393",
+            appId: "1:850006345393:web:f02b92441d3215cbec0490",
+            measurementId: "G-S92BXXGXZD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const docRef = doc(db, "settings", "homepage");
+
+        // Lắng nghe dữ liệu thời gian thực
+        onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                if(data.headline) document.getElementById('displayHeadline').innerText = data.headline;
+                
+                if(data.hotline) {
+                    const hl = document.getElementById('displayHotline');
+                    hl.innerHTML = `<i class="fa-solid fa-phone-volume mr-2 animate-pulse"></i> ${data.hotline}`;
+                    hl.href = 'tel:' + data.hotline.replace(/\s/g, '');
+                }
+                
+                if(data.carName) document.getElementById('displayCarName').innerText = data.carName;
+                if(data.carPrice) document.getElementById('displayCarPrice').innerText = `Chỉ từ ${data.carPrice} VNĐ`;
+                if(data.carPromo) document.getElementById('displayCarPromo').innerText = data.carPromo;
+            }
+        });
+    </script>
+
+    <!-- SCRIPT 2: GỬI TIN NHẮN TELEGRAM KHI KHÁCH ĐIỀN FORM -->
+    <script>
+        document.getElementById('leadForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            const btn = document.getElementById('btnSubmit');
+            btn.innerText = 'ĐANG GỬI THÔNG TIN...';
+
+            const ten = document.getElementById('khachTen').value;
+            const sdt = document.getElementById('khachSDT').value;
+            const xe = document.getElementById('khachXe').value;
+
+            // Đã cập nhật Token và Chat ID của bạn
+            const botToken = '8640843544:AAGBNBwwBfTaydjdgtzZT-YjJxM0i6OY6vw'; 
+            const chatId = '8218792935';
+
+            const textMessage = `🚨 BÁO CÁO: CÓ KHÁCH ĐĂNG KÝ WEB 🚨\n\n👤 Tên khách: ${ten}\n📞 Số ĐT: ${sdt}\n🚗 Dòng xe: ${xe}\n⏰ Lúc: ${new Date().toLocaleString('vi-VN')}`;
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: chatId, text: textMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Gửi thành công! Tường Vân sẽ liên hệ lại ngay ạ.');
+                btn.innerText = 'ĐÃ GỬI YÊU CẦU';
+                document.getElementById('leadForm').reset();
+            })
+            .catch(error => {
+                console.error('Lỗi:', error);
+                alert('Vui lòng gọi trực tiếp vào Hotline để được hỗ trợ nhanh nhất!');
+                btn.innerText = 'Gửi Yêu Cầu Tư Vấn';
+            });
+        });
+    </script>
+</body>
+</html>
