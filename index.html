@@ -174,16 +174,22 @@
                 document.querySelectorAll('.loading-text').forEach(e => e.remove());
                 
                 for(let i = 1; i < rows.length; i++) {
-                    // Yêu cầu ít nhất 3 cột, nếu có cột 4 thì lấy làm mô tả
+                    // Yêu cầu ít nhất 3 cột cơ bản
                     if(rows[i].length >= 3) {
                         let name = rows[i][0] || '';
                         let price = rows[i][1] || '';
                         let img = rows[i][2] || '';
-                        let desc = rows[i][3] || ''; // Cột Đặc điểm xe
+                        let desc = rows[i][3] || ''; // Cột D: Đặc điểm xe
+                        let category = rows[i][4] || ''; // Cột E: Phân loại
 
-                        let isGolf = name.toLowerCase().includes('golf');
+                        // Kiểm tra phân loại dựa trên Cột E (nếu có), nếu không có thì tự tìm chữ "golf" trong tên xe
+                        let isGolf = false;
+                        if (category.toLowerCase().includes('golf') || category.toLowerCase().includes('hatchback')) {
+                            isGolf = true;
+                        } else if (!category) {
+                            isGolf = name.toLowerCase().includes('golf');
+                        }
 
-                        // Cấu trúc Card đã được cập nhật thêm Đặc điểm
                         let cardHTML = `
                         <div class="bg-vwcard rounded-lg p-4 border border-gray-800 flex flex-col justify-between hover:border-gray-500 transition">
                             <img src="${img}" class="w-full h-52 object-cover mb-4 rounded bg-black/20" onerror="this.src='https://placehold.co/600x400?text=VW'">
@@ -258,7 +264,7 @@
                     document.getElementById('popupForm').reset();
                     setTimeout(closePopup, 1000);
                 } else {
-                    alert('Lỗi: Cấu hình Telegram sai.');
+                    alert('Lỗi: Bot Telegram của bạn có thể bị sai mã Token. Vui lòng kiểm tra lại!');
                     btn.innerText = 'Gửi Yêu Cầu';
                 }
             }).catch(() => { alert('Lỗi mạng, vui lòng gọi Hotline!'); btn.innerText = 'Gửi Yêu Cầu'; });
