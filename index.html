@@ -2,105 +2,146 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volkswagen - Đẳng Cấp Đức</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Volkswagen Nghệ An - Đẳng Cấp Đức</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
-            theme: { extend: { colors: { vwbg: '#1a1a1a', vwcard: '#222222', vwred: '#e31837', vwgreen: '#00b14f', zalo: '#0068ff' } } }
+            theme: { 
+                extend: { 
+                    colors: { 
+                        vwblue: '#001e50', 
+                        vwlight: '#f4f4f4',
+                        vwred: '#e31837', 
+                        zalo: '#0068ff' 
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
+                    }
+                } 
+            }
         }
     </script>
     <style>
-        .slide { display: none; animation: fade 1.5s; }
+        .slide { display: none; animation: fade 1.5s ease-in-out; }
         .slide.active { display: block; }
-        @keyframes fade { from { opacity: 0.2; } to { opacity: 1; } }
+        @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
         html { scroll-behavior: smooth; }
         .scroll-mt { scroll-margin-top: 80px; }
+        /* Hiệu ứng trượt lên cho popup mobile */
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
+        /* Giới hạn 2 dòng chữ */
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
 </head>
-<body class="bg-vwbg text-white font-sans relative overflow-x-hidden">
+<body class="bg-vwlight text-gray-800 font-sans relative overflow-x-hidden">
 
-    <!-- POPUP CHÀO MỪNG -->
-    <div id="welcomePopup" class="fixed inset-0 z-[60] bg-black/95 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-vwcard w-full max-w-md rounded-2xl border border-gray-700 p-8 text-center shadow-2xl">
-            <div class="w-16 h-16 rounded-full border-2 border-white flex items-center justify-center font-bold text-3xl mx-auto mb-4 tracking-tighter">W</div>
-            <h2 class="text-2xl font-bold uppercase mb-2 text-white">Xin Chào Quý Khách!</h2>
-            <p class="text-gray-400 text-sm mb-8">Quý khách đang quan tâm đến phân khúc xe nào của Volkswagen?</p>
+    <!-- POPUP CHÀO MỪNG (Thiết kế app-like cho mobile) -->
+    <div id="welcomePopup" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-end md:items-center justify-center transition-opacity duration-300 pb-0 md:p-4">
+        <div class="bg-white w-full max-w-md md:rounded-3xl rounded-t-3xl rounded-b-none border-0 p-8 text-center shadow-2xl animate-slide-up md:animate-none">
+            <div class="w-16 h-16 rounded-full border-[3px] border-vwblue flex items-center justify-center font-bold text-3xl mx-auto mb-4 tracking-tighter text-vwblue">W</div>
+            <h2 class="text-2xl font-extrabold uppercase mb-2 text-vwblue">Xin Chào Quý Khách!</h2>
+            <p class="text-gray-500 text-sm mb-8">Quý khách đang quan tâm đến phân khúc xe nào của Volkswagen?</p>
             <div class="space-y-4">
-                <button onclick="chooseCategory('suv-section')" class="w-full bg-[#001e50] border border-blue-800 hover:bg-blue-900 text-white font-bold py-4 rounded-xl transition uppercase flex justify-between items-center px-6 shadow-lg hover:scale-105">
+                <button onclick="chooseCategory('suv-section')" class="w-full bg-vwblue hover:bg-blue-900 text-white font-bold py-4 rounded-xl transition uppercase flex justify-between items-center px-6 shadow-md hover:shadow-lg">
                     <span>Dòng Xe SUV / MPV</span>
                     <i class="fa-solid fa-truck-pickup text-xl"></i>
                 </button>
-                <button onclick="chooseCategory('golf-section')" class="w-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-white font-bold py-4 rounded-xl transition uppercase flex justify-between items-center px-6 shadow-lg hover:scale-105">
+                <button onclick="chooseCategory('golf-section')" class="w-full bg-white border-2 border-vwblue text-vwblue hover:bg-gray-50 font-bold py-4 rounded-xl transition uppercase flex justify-between items-center px-6 shadow-sm">
                     <span>Hatchback (Dòng Golf)</span>
                     <i class="fa-solid fa-car-side text-xl"></i>
                 </button>
             </div>
-            <button onclick="closeWelcome()" class="mt-6 text-gray-500 text-xs hover:text-white underline">Bỏ qua, tôi muốn xem toàn bộ trang</button>
+            <button onclick="closeWelcome()" class="mt-6 text-gray-400 text-sm hover:text-gray-600 underline font-medium">Bỏ qua, xem toàn bộ trang</button>
         </div>
     </div>
 
-    <!-- BANNER SLIDER -->
-    <header class="w-full relative h-[50vh] md:h-[70vh] overflow-hidden group" id="sliderContainer">
-        <div class="absolute inset-0 z-20 flex flex-col justify-center items-center text-center p-4 pointer-events-none">
-            <h1 class="text-4xl md:text-6xl font-bold uppercase tracking-widest mb-4 drop-shadow-2xl">Volkswagen</h1>
-            <p class="text-lg md:text-xl text-gray-200 mb-8 drop-shadow-lg">Trải nghiệm đẳng cấp kỹ thuật Đức</p>
-            <button onclick="openPopup('Chưa xác định')" class="pointer-events-auto bg-vwred hover:bg-red-700 text-white font-bold py-3 px-8 rounded shadow-lg transition">
-                <i class="fa-solid fa-car-side mr-2"></i> ĐĂNG KÝ LÁI THỬ NGAY
-            </button>
+    <!-- BANNER SLIDER (Thiết kế tràn viền, text box sang trọng) -->
+    <header class="w-full relative h-[60vh] md:h-[80vh] overflow-hidden group" id="sliderContainer">
+        <div class="absolute inset-0 z-20 flex flex-col justify-center items-center text-center p-6 pointer-events-none">
+            <div class="bg-black/30 backdrop-blur-md p-8 md:p-12 rounded-3xl border border-white/20 shadow-2xl">
+                <h1 class="text-4xl md:text-6xl font-extrabold uppercase tracking-widest mb-4 text-white drop-shadow-lg">Volkswagen</h1>
+                <p class="text-lg md:text-xl text-gray-100 mb-8 font-medium">Đẳng Cấp Đức - Giá Trị Bền Vững</p>
+                <button onclick="openPopup('Chưa xác định')" class="pointer-events-auto bg-vwred hover:bg-red-700 text-white font-bold py-3.5 px-8 rounded-full shadow-lg transition uppercase tracking-wide">
+                    <i class="fa-solid fa-steering-wheel mr-2"></i> Đăng Ký Lái Thử Ngay
+                </button>
+            </div>
         </div>
-        <button onclick="changeSlide(-1)" class="absolute left-4 top-1/2 z-30 bg-black/50 p-3 rounded-full hover:bg-vwred transition"><i class="fa-solid fa-chevron-left"></i></button>
-        <button onclick="changeSlide(1)" class="absolute right-4 top-1/2 z-30 bg-black/50 p-3 rounded-full hover:bg-vwred transition"><i class="fa-solid fa-chevron-right"></i></button>
+        <button onclick="changeSlide(-1)" class="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 z-30 bg-white/20 backdrop-blur-sm p-4 rounded-full text-white hover:bg-white hover:text-vwblue transition"><i class="fa-solid fa-chevron-left"></i></button>
+        <button onclick="changeSlide(1)" class="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 z-30 bg-white/20 backdrop-blur-sm p-4 rounded-full text-white hover:bg-white hover:text-vwblue transition"><i class="fa-solid fa-chevron-right"></i></button>
     </header>
 
     <!-- DANH MỤC 1: SUV & MPV -->
     <section id="suv-section" class="scroll-mt max-w-7xl mx-auto pt-16 px-4">
-        <h2 class="text-3xl font-bold text-center mb-10 uppercase border-b border-gray-700 pb-4 block w-max mx-auto text-blue-400">
-            <i class="fa-solid fa-truck-pickup mr-2"></i> Phân Khúc SUV & MPV Cao Cấp
-        </h2>
-        <div id="suvGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="col-span-full text-center text-gray-500 py-4 loading-text"><i class="fa-solid fa-circle-notch fa-spin text-2xl"></i><p class="mt-2">Đang tải dữ liệu SUV...</p></div>
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-extrabold uppercase text-vwblue tracking-tight inline-block max-w-full">
+                Phân Khúc SUV & MPV
+            </h2>
+            <div class="w-24 h-1 bg-vwred mx-auto mt-4 rounded-full"></div>
+        </div>
+        <div id="suvGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="col-span-full text-center text-gray-500 py-10 loading-text"><i class="fa-solid fa-circle-notch fa-spin text-3xl"></i><p class="mt-3">Đang đồng bộ dữ liệu...</p></div>
         </div>
     </section>
 
     <!-- DANH MỤC 2: XE GOLF -->
-    <section id="golf-section" class="scroll-mt max-w-7xl mx-auto pt-20 pb-16 px-4">
-        <h2 class="text-3xl font-bold text-center mb-10 uppercase border-b border-gray-700 pb-4 block w-max mx-auto text-yellow-500">
-            <i class="fa-solid fa-car-on mr-2"></i> Biểu Tượng Hatchback (Dòng Golf)
-        </h2>
-        <div id="golfGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="col-span-full text-center text-gray-500 py-4 loading-text"><i class="fa-solid fa-circle-notch fa-spin text-2xl"></i><p class="mt-2">Đang tải dữ liệu Golf...</p></div>
+    <section id="golf-section" class="scroll-mt max-w-7xl mx-auto pt-20 pb-24 px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-extrabold uppercase text-vwblue tracking-tight inline-block max-w-full">
+                Hatchback Huyền Thoại
+            </h2>
+            <div class="w-24 h-1 bg-vwred mx-auto mt-4 rounded-full"></div>
+        </div>
+        <div id="golfGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="col-span-full text-center text-gray-500 py-10 loading-text"><i class="fa-solid fa-circle-notch fa-spin text-3xl"></i><p class="mt-3">Đang đồng bộ dữ liệu...</p></div>
         </div>
     </section>
 
-    <!-- NÚT THẢ NỔI -->
-    <div class="fixed bottom-6 left-6 z-40 flex flex-col gap-3">
-        <a href="https://zalo.me/0559260268" target="_blank" class="w-14 h-14 bg-zalo rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition cursor-pointer font-bold text-xl">Zalo</a>
-        <a href="tel:0559260268" class="bg-vwred rounded-full flex items-center shadow-xl hover:scale-105 transition cursor-pointer pr-4 h-12">
-            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-vwred text-xl"><i class="fa-solid fa-phone-volume animate-pulse"></i></div>
-            <span class="font-bold text-sm ml-3 drop-shadow">Hotline: 0559.260.268</span>
+    <!-- NÚT THẢ NỔI (Thiết kế tinh tế hơn) -->
+    <div class="fixed bottom-6 left-6 z-40 flex flex-col gap-4">
+        <a href="https://zalo.me/0559260268" target="_blank" class="w-14 h-14 bg-zalo rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition cursor-pointer text-white font-bold text-sm border-2 border-white">
+            Zalo
+        </a>
+        <a href="tel:0559260268" class="bg-vwred rounded-full flex items-center shadow-lg hover:scale-105 transition cursor-pointer pr-5 h-14 border-2 border-white group">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-vwred text-xl ml-1 group-hover:animate-bounce">
+                <i class="fa-solid fa-phone-volume"></i>
+            </div>
+            <span class="text-white font-bold text-sm ml-3 tracking-wide">0559.260.268</span>
         </a>
     </div>
 
-    <!-- POPUP FORM -->
-    <div id="leadPopup" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4">
-        <div class="bg-vwcard w-full max-w-lg rounded-lg border border-gray-700 relative overflow-hidden">
-            <button onclick="closePopup()" class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
-            <div class="p-8">
-                <h2 class="text-2xl font-bold text-center uppercase mb-2">Đăng Ký Lái Thử / Báo Giá</h2>
-                <form id="popupForm" class="space-y-4 mt-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="popName" required placeholder="Họ tên (Bắt buộc)" class="w-full bg-transparent border border-gray-600 rounded p-3 focus:border-vwred">
-                        <input type="tel" id="popPhone" required placeholder="Điện thoại (Bắt buộc)" class="w-full bg-transparent border border-gray-600 rounded p-3 focus:border-vwred">
+    <!-- POPUP FORM (App-like modal) -->
+    <div id="leadPopup" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-end md:items-center justify-center transition-opacity duration-300 pb-0 md:p-4">
+        <div class="bg-white w-full max-w-lg md:rounded-3xl rounded-t-3xl rounded-b-none border-0 relative overflow-hidden shadow-2xl animate-slide-up md:animate-none">
+            <div class="bg-vwblue p-6 text-center relative">
+                <button onclick="closePopup()" class="absolute top-4 right-4 text-white/70 hover:text-white text-2xl w-8 h-8 flex items-center justify-center rounded-full bg-white/10">&times;</button>
+                <h2 class="text-xl font-bold uppercase text-white tracking-wide">Nhận Báo Giá Chi Tiết</h2>
+                <p class="text-blue-200 text-xs mt-1">Chuyên viên sẽ liên hệ lại ngay lập tức</p>
+            </div>
+            
+            <div class="p-6 md:p-8">
+                <form id="popupForm" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">Họ và tên *</label>
+                        <input type="text" id="popName" required placeholder="Nguyễn Văn A" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-800 focus:outline-none focus:border-vwblue focus:ring-1 focus:ring-vwblue transition">
                     </div>
-                    <select id="popCar" class="w-full bg-vwcard border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-vwred appearance-none">
-                        <option value="Chưa xác định">== Chọn dòng xe quan tâm ==</option>
-                        <optgroup id="optgroupSUV" label="Dòng SUV & MPV"></optgroup>
-                        <optgroup id="optgroupGolf" label="Dòng Golf (Hatchback)"></optgroup>
-                    </select>
-                    <button type="submit" id="popSubmitBtn" class="w-full bg-vwred hover:bg-red-700 font-bold py-4 rounded transition flex justify-center uppercase mt-2">
-                        Gửi Yêu Cầu Cho Chuyên Viên
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">Số điện thoại *</label>
+                        <input type="tel" id="popPhone" required placeholder="09xxxxxxx" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-800 focus:outline-none focus:border-vwblue focus:ring-1 focus:ring-vwblue transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">Dòng xe quan tâm</label>
+                        <select id="popCar" class="w-full bg-white border border-gray-200 rounded-xl p-3.5 text-gray-800 focus:outline-none focus:border-vwblue focus:ring-1 focus:ring-vwblue transition appearance-none font-medium">
+                            <option value="Chưa xác định">== Vui lòng chọn xe ==</option>
+                            <optgroup id="optgroupSUV" label="Dòng SUV & MPV"></optgroup>
+                            <optgroup id="optgroupGolf" label="Dòng Golf (Hatchback)"></optgroup>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" id="popSubmitBtn" class="w-full bg-vwblue hover:bg-blue-900 text-white font-bold py-4 rounded-xl shadow-md transition flex items-center justify-center uppercase tracking-wide mt-4">
+                        <i class="fa-solid fa-paper-plane mr-2"></i> Gửi Yêu Cầu Tư Vấn
                     </button>
                 </form>
             </div>
@@ -122,7 +163,7 @@
         function chooseCategory(sectionId) {
             closeWelcome();
             const section = document.getElementById(sectionId);
-            if(section) { setTimeout(() => { section.scrollIntoView({ behavior: 'smooth' }); }, 200); }
+            if(section) { setTimeout(() => { section.scrollIntoView({ behavior: 'smooth' }); }, 300); }
         }
 
         function parseCSV(text) {
@@ -174,15 +215,13 @@
                 document.querySelectorAll('.loading-text').forEach(e => e.remove());
                 
                 for(let i = 1; i < rows.length; i++) {
-                    // Yêu cầu ít nhất 3 cột cơ bản
                     if(rows[i].length >= 3) {
                         let name = rows[i][0] || '';
                         let price = rows[i][1] || '';
                         let img = rows[i][2] || '';
-                        let desc = rows[i][3] || ''; // Cột D: Đặc điểm xe
-                        let category = rows[i][4] || ''; // Cột E: Phân loại
+                        let desc = rows[i][3] || ''; 
+                        let category = rows[i][4] || ''; 
 
-                        // Kiểm tra phân loại dựa trên Cột E (nếu có), nếu không có thì tự tìm chữ "golf" trong tên xe
                         let isGolf = false;
                         if (category.toLowerCase().includes('golf') || category.toLowerCase().includes('hatchback')) {
                             isGolf = true;
@@ -190,18 +229,21 @@
                             isGolf = name.toLowerCase().includes('golf');
                         }
 
+                        // THIẾT KẾ CARD MỚI (Light Mode, Sang trọng, Bo tròn)
                         let cardHTML = `
-                        <div class="bg-vwcard rounded-lg p-4 border border-gray-800 flex flex-col justify-between hover:border-gray-500 transition">
-                            <img src="${img}" class="w-full h-52 object-cover mb-4 rounded bg-black/20" onerror="this.src='https://placehold.co/600x400?text=VW'">
-                            <div class="text-center flex-1 flex flex-col justify-between">
+                        <div class="bg-white rounded-2xl border border-gray-100 flex flex-col justify-between hover:shadow-soft transition-all duration-300 overflow-hidden group">
+                            <div class="bg-gray-100/50 p-6 aspect-video flex items-center justify-center relative overflow-hidden border-b border-gray-50">
+                                <img src="${img}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400?text=VW'">
+                            </div>
+                            <div class="p-6 md:p-8 text-center flex-1 flex flex-col justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-white mb-1">${name}</h3>
-                                    <p class="text-vwgreen text-xs font-semibold mb-3 h-8 flex items-center justify-center">${desc}</p>
-                                    <p class="text-white font-bold text-sm mb-4">Giá từ: <span class="text-vwred">${price}</span></p>
+                                    <h3 class="text-xl md:text-2xl font-extrabold text-vwblue mb-2">${name}</h3>
+                                    <p class="text-gray-500 text-sm font-medium mb-4 h-10 line-clamp-2">${desc}</p>
+                                    <p class="text-gray-400 font-medium text-sm mb-6 uppercase tracking-wider">Giá từ <span class="text-vwred font-bold text-xl md:text-2xl block mt-1">${price}</span></p>
                                 </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <button onclick="openPopup('${name}')" class="bg-vwred hover:bg-red-700 text-xs font-bold py-2 rounded"><i class="fa-solid fa-bolt mr-1"></i> NHẬN ƯU ĐÃI</button>
-                                    <a href="tel:0559260268" class="border border-vwgreen text-vwgreen hover:bg-vwgreen hover:text-white text-xs font-bold py-2 rounded flex justify-center items-center"><i class="fa-solid fa-phone-volume mr-1"></i> GỌI CHỐT GIÁ</a>
+                                <div class="grid grid-cols-2 gap-3 mt-2">
+                                    <button onclick="openPopup('${name}')" class="bg-vwblue hover:bg-blue-900 text-white text-[11px] md:text-xs font-bold py-3 md:py-3.5 rounded-xl uppercase tracking-wide transition"><i class="fa-solid fa-paper-plane mr-1"></i> Báo Giá</button>
+                                    <a href="tel:0559260268" class="border-2 border-vwblue text-vwblue hover:bg-vwblue hover:text-white text-[11px] md:text-xs font-bold py-3 md:py-3.5 rounded-xl uppercase tracking-wide flex justify-center items-center transition"><i class="fa-solid fa-phone mr-1"></i> Gọi Ngay</a>
                                 </div>
                             </div>
                         </div>`;
@@ -248,23 +290,23 @@
         document.getElementById('popupForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('popSubmitBtn');
-            btn.innerText = 'ĐANG GỬI...';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> ĐANG GỬI...';
             const ten = document.getElementById('popName').value;
             const sdt = document.getElementById('popPhone').value;
             const xe = document.getElementById('popCar').value;
-            const textMessage = `🚨 CÓ KHÁCH TỪ GOOGLE SHEETS WEB 🚨\n👤 Tên: ${ten}\n📞 SĐT: ${sdt}\n🚗 Xe: ${xe}\n⏰ Lúc: ${new Date().toLocaleString('vi-VN')}`;
+            const textMessage = `🚨 CÓ KHÁCH TỪ WEB VW NGHỆ AN 🚨\n👤 Tên: ${ten}\n📞 SĐT: ${sdt}\n🚗 Xe: ${xe}\n⏰ Lúc: ${new Date().toLocaleString('vi-VN')}`;
 
             fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: textMessage })
             }).then(response => {
                 if(response.ok) {
-                    alert('Đã đăng ký! Tường Vân sẽ liên hệ lại ngay.');
-                    btn.innerText = 'ĐÃ GỬI THÀNH CÔNG';
+                    alert('Đã gửi thành công! Chuyên viên Tường Vân sẽ liên hệ lại ngay.');
+                    btn.innerHTML = '<i class="fa-solid fa-check mr-2"></i> ĐÃ GỬI';
                     document.getElementById('popupForm').reset();
                     setTimeout(closePopup, 1000);
                 } else {
-                    alert('Lỗi: Bot Telegram của bạn có thể bị sai mã Token. Vui lòng kiểm tra lại!');
+                    alert('Lỗi: Cấu hình Telegram sai.');
                     btn.innerText = 'Gửi Yêu Cầu';
                 }
             }).catch(() => { alert('Lỗi mạng, vui lòng gọi Hotline!'); btn.innerText = 'Gửi Yêu Cầu'; });
